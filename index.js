@@ -2,13 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-app.use(
-  cors({
-    origin: 'http://localhost:5173',
-    methods: ['GET'],
-    credentials: true,
-  })
-);
+if (process.env.NODE_ENV !== 'production') {
+  app.use(
+    cors({
+      origin: 'http://localhost:5173',
+      methods: ['GET'],
+      credentials: true,
+    })
+  );
+}
 app.use(express.json());
 
 app.get('/api/hello', (req, res) => {
