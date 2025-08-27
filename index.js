@@ -33,7 +33,8 @@ app.use(
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log('Request Headers:', req.headers);
+  console.log(`CORS exception: ${process.env.CLIENT_ORIGIN}`);
+  console.log(`Request Origin: ${req.headers.origin}`);
   next();
 });
 
