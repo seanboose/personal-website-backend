@@ -26,7 +26,7 @@ const app = express();
 if (process.env.NODE_ENV !== 'production') {
   app.use(
     cors({
-      origin: 'http://localhost:5173',
+      origin: process.env.CLIENT_ORIGIN,
       methods: ['GET'],
       credentials: true,
     })
