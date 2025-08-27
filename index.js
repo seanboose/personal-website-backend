@@ -9,7 +9,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
-const env = process.env.NODE_ENV || 'development';
+const envDevelopment = 'development';
+const env = process.env.NODE_ENV || envDevelopment;
 dotenv.config({
   path: [`.env.${env}.local`, `.env.${env}`, '.env.local', '.env'],
 });
@@ -17,17 +18,24 @@ dotenv.config({
 const s3 = new S3Client({
   region: 'us-east-1',
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: getRequiredEnv('AWS_ACCESS_KEY_ID'),
+    secretAccessKey: getRequiredEnv('AWS_SECRET_ACCESS_KEY'),
   },
 });
-const s3ImagesBucket = 'boose-personal-website-images-dev';
+const s3ImagesBucket = getRequiredEnv('AWS_S3_IMAGES_BUCKET');
+
+function getRequiredEnv(key) {
+  if (!process.env[key]) {
+    throw new Error(`Missing required env var: ${key}`);
+  }
+  return process.env[key];
+}
 
 const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: getRequiredEnv('CLIENT_ORIGIN'),
     methods: ['GET'],
     credentials: true,
   })
@@ -40,8 +48,8 @@ app.get('/api/hello', (req, res) => {
 
 app.get('/api/listImages', async (req, res) => {
   let images = [];
-  if (env !== 'development') {
-    return res.status(501).json({ images });
+  if (!s3ImagesBucket) {
+    return res.status(500).json({ error: 'images bucket not defined' });
   }
 
   const command = new ListObjectsV2Command({
