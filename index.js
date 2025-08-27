@@ -52,16 +52,20 @@ app.get('/api/listImages', async (req, res) => {
     const fileNames = response.Contents.map((item) => {
       return item.Key;
     });
-    images = await getImageUrls(fileNames);
+    const imageUrls = await getImageUrls(fileNames);
+    images = fileNames.map((fileName) => ({
+      fileName,
+      url: imageUrls[fileName],
+    }));
   }
   res.json({ images });
 });
 
 async function getImageUrls(images) {
-  const signedUrls = [];
+  const signedUrls = {};
   for (const key of images) {
     const url = await generateSignedUrl(key);
-    signedUrls.push(url);
+    signedUrls[key] = url;
   }
   return signedUrls;
 }
