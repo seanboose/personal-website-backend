@@ -1,4 +1,10 @@
-import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  ListObjectsV2Command,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
@@ -33,8 +39,9 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/api/listImages', async (req, res) => {
+  let images = [];
   if (env !== 'development') {
-    return res.status(501).json({ images: [] });
+    return res.status(501).json({ images });
   }
 
   const command = new ListObjectsV2Command({
@@ -42,14 +49,31 @@ app.get('/api/listImages', async (req, res) => {
   });
   const response = await s3.send(command);
   if (response.Contents) {
-    const images = response.Contents.map((item) => {
+    const fileNames = response.Contents.map((item) => {
       return item.Key;
     });
-    res.json({ images });
-  } else {
-    res.json({ images: [] });
+    images = await getImageUrls(fileNames);
   }
+  res.json({ images });
 });
+
+async function getImageUrls(images) {
+  const signedUrls = [];
+  for (const key of images) {
+    const url = await generateSignedUrl(key);
+    signedUrls.push(url);
+  }
+  return signedUrls;
+}
+
+async function generateSignedUrl(key) {
+  const command = new GetObjectCommand({
+    Bucket: s3ImagesBucket,
+    Key: key,
+  });
+  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+  return url;
+}
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
