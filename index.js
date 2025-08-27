@@ -9,7 +9,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 
-const env = process.env.NODE_ENV || 'development';
+const envDevelopment = 'development';
+const env = process.env.NODE_ENV || envDevelopment;
 dotenv.config({
   path: [`.env.${env}.local`, `.env.${env}`, '.env.local', '.env'],
 });
@@ -21,7 +22,7 @@ const s3 = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
-const s3ImagesBucket = 'boose-personal-website-images-dev';
+const s3ImagesBucket = process.env.AWS_S3_IMAGES_BUCKET;
 
 const app = express();
 
@@ -40,8 +41,8 @@ app.get('/api/hello', (req, res) => {
 
 app.get('/api/listImages', async (req, res) => {
   let images = [];
-  if (env !== 'development') {
-    return res.status(501).json({ images });
+  if (!s3ImagesBucket) {
+    return res.status(500).json({ error: 'images bucket not defined' });
   }
 
   const command = new ListObjectsV2Command({
