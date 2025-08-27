@@ -10,7 +10,9 @@ import express from 'express';
 import cors from 'cors';
 
 const env = process.env.NODE_ENV || 'development';
-dotenv.config({ path: `.env.${env}` });
+dotenv.config({
+  path: [`.env.${env}.local`, `.env.${env}`, '.env.local', '.env'],
+});
 
 const s3 = new S3Client({
   region: 'us-east-1',
