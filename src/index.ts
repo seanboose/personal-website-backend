@@ -24,7 +24,7 @@ const s3 = new S3Client({
 });
 const s3ImagesBucket = getRequiredEnv('AWS_S3_IMAGES_BUCKET');
 
-function getRequiredEnv(key) {
+function getRequiredEnv(key: string): string {
   if (!process.env[key]) {
     throw new Error(`Missing required env var: ${key}`);
   }
@@ -46,8 +46,13 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello from backend!' });
 });
 
+interface ImageData {
+  fileName: string;
+  url: string;
+}
+
 app.get('/api/listImages', async (req, res) => {
-  let images = [];
+  let images: ImageData[] = [];
   if (!s3ImagesBucket) {
     return res.status(500).json({ error: 'images bucket not defined' });
   }
@@ -59,7 +64,7 @@ app.get('/api/listImages', async (req, res) => {
   if (response.Contents) {
     const fileNames = response.Contents.map((item) => {
       return item.Key;
-    });
+    }).filter((key) => key !== undefined);
     const imageUrls = await getImageUrls(fileNames);
     images = fileNames.map((fileName) => ({
       fileName,
@@ -69,8 +74,8 @@ app.get('/api/listImages', async (req, res) => {
   res.json({ images });
 });
 
-async function getImageUrls(images) {
-  const signedUrls = {};
+async function getImageUrls(images: string[]): Promise<Record<string, string>> {
+  const signedUrls: Record<string, string> = {};
   for (const key of images) {
     const url = await generateSignedUrl(key);
     signedUrls[key] = url;
@@ -78,7 +83,7 @@ async function getImageUrls(images) {
   return signedUrls;
 }
 
-async function generateSignedUrl(key) {
+async function generateSignedUrl(key: string): Promise<string> {
   const command = new GetObjectCommand({
     Bucket: s3ImagesBucket,
     Key: key,
