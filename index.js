@@ -23,15 +23,13 @@ const s3ImagesBucket = 'boose-personal-website-images-dev';
 
 const app = express();
 
-if (process.env.NODE_ENV !== 'production') {
-  app.use(
-    cors({
-      origin: process.env.CLIENT_ORIGIN,
-      methods: ['GET'],
-      credentials: true,
-    })
-  );
-}
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN,
+    methods: ['GET'],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.get('/api/hello', (req, res) => {
