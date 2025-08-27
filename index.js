@@ -18,17 +18,24 @@ dotenv.config({
 const s3 = new S3Client({
   region: 'us-east-1',
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: getRequiredEnv('AWS_ACCESS_KEY_ID'),
+    secretAccessKey: getRequiredEnv('AWS_SECRET_ACCESS_KEY'),
   },
 });
-const s3ImagesBucket = process.env.AWS_S3_IMAGES_BUCKET;
+const s3ImagesBucket = getRequiredEnv('AWS_S3_IMAGES_BUCKET');
+
+function getRequiredEnv(key) {
+  if (!process.env[key]) {
+    throw new Error(`Missing required env var: ${key}`);
+  }
+  return process.env[key];
+}
 
 const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: getRequiredEnv('CLIENT_ORIGIN'),
     methods: ['GET'],
     credentials: true,
   })
