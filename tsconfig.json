@@ -2,15 +2,10 @@
   "compilerOptions": {
     "allowImportingTsExtensions": false,
     "allowJs": true,
-    "baseUrl": "./src",
     "esModuleInterop": true,
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "dist",
-    "paths": {
-      "@features/*": ["features/*"],
-      "@shared/*": ["shared/*"]
-    },
     "rootDir": "src",
     "strict": true,
     "target": "esnext",
