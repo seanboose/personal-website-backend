@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 
-import { config } from './shared/config';
-import { imagesRoutes } from './features/images/images.routes';
-import { listImages } from './features/images/images.controllers';
+import { config } from './shared/config.js';
+import { imagesRoutes } from './features/images/images.routes.js';
+import { listImages } from './features/images/images.controllers.js';
 
 const app = express();
 

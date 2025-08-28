@@ -1,4 +1,4 @@
-import { getImageList } from './images.service';
+import { getImageList } from './images.service.js';
 import type { RequestHandler } from 'express';
 
 export const listImages: RequestHandler = async (req, res, next) => {

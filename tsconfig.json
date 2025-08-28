@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "strict": true,
     "outDir": "dist",
     "rootDir": "src",
     "allowJs": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": false,
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
