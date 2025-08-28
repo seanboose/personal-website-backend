@@ -8,7 +8,7 @@
     "dev:tsx": "tsx watch src/index.ts",
     "build": "npm run lint && npm run build:ts",
     "build:ts": "tsc",
-    "start": "node dist/index.js",
+    "serve": "node dist/index.js",
     "lint": "eslint src",
     "lint:watch": "nodemon --watch src --ext js,ts,jsx,tsx --delay 100ms --exec \"npm run lint\"",
     "test": "echo \"Error: no test specified\" && exit 1"
