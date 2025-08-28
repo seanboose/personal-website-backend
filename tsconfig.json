@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowImportingTsExtensions": false,
+    "allowImportingTsExtensions": false, // node needs .js extensions in dist/
     "allowJs": true,
     "esModuleInterop": true,
     "module": "nodenext",
