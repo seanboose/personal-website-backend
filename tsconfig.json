@@ -1,15 +1,20 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "allowImportingTsExtensions": false,
+    "allowJs": true,
+    "baseUrl": "./src",
+    "esModuleInterop": true,
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "esModuleInterop": true,
-    "strict": true,
     "outDir": "dist",
+    "paths": {
+      "@features/*": ["features/*"],
+      "@shared/*": ["shared/*"]
+    },
     "rootDir": "src",
-    "allowJs": true,
+    "strict": true,
+    "target": "esnext",
     "verbatimModuleSyntax": true,
-    "allowImportingTsExtensions": false,
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

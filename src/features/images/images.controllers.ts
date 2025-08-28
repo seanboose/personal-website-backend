@@ -1,5 +1,6 @@
-import { getImageList } from './images.service.js';
 import type { RequestHandler } from 'express';
+
+import { getImageList } from './images.service.js';
 
 export const listImages: RequestHandler = async (req, res, next) => {
   try {

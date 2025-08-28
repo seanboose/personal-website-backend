@@ -1,9 +1,9 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 
-import { config } from './shared/config.js';
-import { imagesRoutes } from './features/images/images.routes.js';
 import { listImages } from './features/images/images.controllers.js';
+import { imagesRoutes } from './features/images/images.routes.js';
+import { config } from './shared/config.js';
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(
     origin: config.clientOrigin,
     methods: ['GET'],
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 
