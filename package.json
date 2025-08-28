@@ -2,9 +2,15 @@
   "name": "personal-website-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node index.js",
+    "dev": "concurrently -c yellow,cyan \"npm:dev:tsx\" \"npm:lint:watch\"",
+    "dev:tsx": "tsx watch src/index.ts",
+    "build": "npm run lint && npm run build:ts",
+    "build:ts": "tsc",
+    "serve": "node dist/index.js",
+    "lint": "eslint src",
+    "lint:watch": "nodemon --watch src --ext js,ts,jsx,tsx --delay 100ms --exec \"npm run lint\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,6 +24,19 @@
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.876.0",
     "@aws-sdk/s3-request-presigner": "^3.876.0",
-    "dotenv": "^17.2.1"
+    "@eslint/js": "^9.34.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "concurrently": "^9.2.1",
+    "dotenv": "^17.2.1",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.41.0"
   }
 }
