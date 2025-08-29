@@ -2,16 +2,11 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowImportingTsExtensions": false, // node needs .js extensions in dist/
-    "allowJs": true,
-    "esModuleInterop": true,
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "rootDir": "src",
-    "strict": true,
     "target": "esnext",
-    "verbatimModuleSyntax": true,
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
 }
