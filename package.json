@@ -4,25 +4,35 @@
   "scripts": {
     "be:build": "npm run build -w apps/backend",
     "be:dev": "npm run dev -w apps/backend",
-    "be:serve": "npm run serve -w apps/backend"
+    "be:serve": "npm run serve -w apps/backend",
+    "fe:build": "npm run build -w apps/frontend",
+    "fe:dev": "npm run dev -w apps/frontend",
+    "fe:serve": "npm run start -w apps/frontend"
   },
   "type": "module",
   "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^9.34.0",
+    "@react-router/dev": "^7.7.1",
+    "@tailwindcss/vite": "^4.1.4",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
+    "@types/react-dom": "^19.1.2",
+    "@types/react": "^19.1.2",
     "concurrently": "^9.2.1",
     "dotenv": "^17.2.1",
-    "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint": "^9.34.0",
     "nodemon": "^3.1.10",
+    "tailwindcss": "^4.1.4",
     "tsx": "^4.20.5",
+    "typescript-eslint": "^8.41.0",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.41.0"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vite": "^6.3.3"
   },
   "workspaces": [
     "./apps/*",
