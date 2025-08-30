@@ -7,6 +7,7 @@
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "rootDir": "src",
+    "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
     "verbatimModuleSyntax": true,
