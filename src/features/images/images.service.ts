@@ -1,9 +1,9 @@
 import { GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { type ImageData } from '@seanboose/personal-website-api-types';
 
 import { s3 } from '../../shared/aws.js';
 import { config } from '../../shared/config.js';
-import { type ImageData } from './images.types.js';
 
 export const getImageList = async () => {
   let images: ImageData[] = [];
