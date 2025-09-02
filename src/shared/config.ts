@@ -7,19 +7,21 @@ dotenv.config({
 });
 
 export interface Config {
-  apiKey: string;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
   clientOrigin: string;
+  internalAuthKey: string;
+  jwtKey: string;
   env: string;
   s3ImagesBucket: string;
 }
 
 export const config: Config = {
-  apiKey: getRequiredEnv('API_KEY'),
   awsAccessKeyId: getRequiredEnv('AWS_ACCESS_KEY_ID'),
   awsSecretAccessKey: getRequiredEnv('AWS_SECRET_ACCESS_KEY'),
   clientOrigin: getRequiredEnv('CLIENT_ORIGIN'),
+  internalAuthKey: getRequiredEnv('INTERNAL_AUTH_KEY'),
+  jwtKey: getRequiredEnv('JWT_KEY'),
   env,
   s3ImagesBucket: getRequiredEnv('AWS_S3_IMAGES_BUCKET'),
 };

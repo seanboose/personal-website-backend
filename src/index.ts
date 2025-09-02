@@ -3,7 +3,8 @@ import express from 'express';
 
 import { listImages } from './features/images/images.controllers.js';
 import { imagesRoutes } from './features/images/images.routes.js';
-import { requireAuth } from './shared/auth.js';
+import { grantAuth } from './shared/auth.js';
+// import { requireAuth } from './shared/auth.js';
 import { config } from './shared/config.js';
 
 const app = express();
@@ -16,7 +17,9 @@ app.use(
   }),
 );
 app.use(express.json());
-app.use(requireAuth);
+// app.use(requireAuth);
+
+app.post('/api/auth/grant', grantAuth);
 
 /**
  * @deprecated use api/images/list instead
