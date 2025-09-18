@@ -17,7 +17,7 @@ export const grantAuth: RequestHandler = (req, res) => {
     return res.status(400).json({ message: 'Bad Request, no client provided' });
   }
 
-  const token = generateToken({ authRequestClientKey: client }); // TODO need a useful payload?
+  const token = generateToken({ authRequestClientKey: client });
   res.cookie('access_token', token, {
     httpOnly: true,
     secure: true,
