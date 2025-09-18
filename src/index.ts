@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 
-import { listImages } from './features/images/images.controllers.js';
+import { authRoutes } from './features/auth/auth.routes.js';
 import { imagesRoutes } from './features/images/images.routes.js';
 import { config } from './shared/config.js';
 
@@ -16,11 +16,8 @@ app.use(
 );
 app.use(express.json());
 
-/**
- * @deprecated use api/images/list instead
- */
-app.get('/api/listImages', listImages);
 app.use('/api/images', imagesRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello from backend!' });
