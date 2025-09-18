@@ -3,7 +3,7 @@ import type { RequestHandler } from 'express';
 import { config } from '../../shared/config.js';
 import { generateToken, maxAgeS } from './auth.service.js';
 
-const authRequestHeader = 'x-internal-auth-key';
+const authRequestHeader = 'internal-auth-key';
 const authRequestClientKey = 'auth-request-client';
 
 export const grantAuth: RequestHandler = (req, res) => {
