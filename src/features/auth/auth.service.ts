@@ -2,20 +2,18 @@ import jwt from 'jsonwebtoken';
 
 import { config } from '../../shared/config.js';
 
-export interface JwtPayload {
+export interface JwtRequestPayload {
   authRequestClientKey: string;
 }
 
-const generateToken = (payload: JwtPayload, expiresIn: number) => {
-  console.log(payload);
-  console.log(expiresIn);
+const generateToken = (payload: JwtRequestPayload, expiresIn: number) => {
   return jwt.sign(payload, config.jwtKey, { expiresIn });
 };
 
-export const generateAccessToken = (payload: JwtPayload) =>
+export const generateAccessToken = (payload: JwtRequestPayload) =>
   generateToken(payload, accessAgeS);
 
-export const generateRefreshToken = (payload: JwtPayload) =>
+export const generateRefreshToken = (payload: JwtRequestPayload) =>
   generateToken(payload, refreshAgeS);
 
 // TODO: forcing this to always expire for testing
