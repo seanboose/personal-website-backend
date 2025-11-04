@@ -1,3 +1,4 @@
+import { authErrors } from '@seanboose/personal-website-api-types';
 import { parse } from 'cookie';
 import type { Request, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
@@ -8,7 +9,7 @@ export const requireAuth: RequestHandler = (req, res, next) => {
   const accessToken = readAccessToken(req);
   if (!accessToken) {
     res.status(401).json({
-      name: errorTokenNotProvided,
+      name: authErrors.accessTokenNotProvided,
       message: 'Unauthorized, no token provided',
     });
     return;
@@ -16,14 +17,13 @@ export const requireAuth: RequestHandler = (req, res, next) => {
 
   jwt.verify(accessToken, config.jwtKey, (err: unknown) => {
     if (err instanceof Error && err.name === 'TokenExpiredError') {
-      // TODO need to type these error responses, probably within api-types
       res.status(401).json({
-        name: errorAuthTokenExpired,
+        name: authErrors.accessTokenExpired,
         message: 'Auth token expired, please refresh',
       });
     } else if (err) {
       res.status(401).json({
-        name: errorAuthTokenInvalid,
+        name: authErrors.accessTokenInvalid,
         message: 'Unauthorized, invalid token',
       });
       return;
@@ -44,10 +44,3 @@ export const readRefreshToken = (req: Request) => {
     req.cookies?.refresh_token || parse(req.headers.cookie || '').refresh_token
   );
 };
-
-// TODO need to standardize these around app
-const errorTokenNotProvided = 'TOKEN_NOT_PROVIDED';
-const errorAuthTokenExpired = 'AUTH_TOKEN_EXPIRED';
-const errorAuthTokenInvalid = 'AUTH_TOKEN_INVALID';
-export const errorRefreshTokenExpired = 'REFRESH_TOKEN_EXPIRED';
-export const errorRefreshTokenInvalid = 'REFRESH_TOKEN_INVALID';

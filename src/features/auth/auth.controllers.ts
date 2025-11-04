@@ -1,3 +1,10 @@
+import {
+  authAccessTokenName,
+  authErrors,
+  authRefreshTokenName,
+  authRequestClientKey,
+  authRequestHeaderName,
+} from '@seanboose/personal-website-api-types';
 import type { RequestHandler, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -11,21 +18,21 @@ import {
   refreshAgeS,
 } from './auth.service.js';
 
-const authRequestHeader = 'internal-auth-key';
-const authRequestClientKey = 'auth-request-client';
-// TODO can these live in api-types
-const accessTokenName = 'access_token';
-const refreshTokenName = 'refresh_token';
-
 export const grantAuth: RequestHandler = (req, res) => {
-  const authRequestKey = req.headers[authRequestHeader];
+  const authRequestKey = req.headers[authRequestHeaderName];
   if (authRequestKey !== config.authRequestKey) {
-    return res.status(403).json({ message: 'Forbidden, invalid auth key' });
+    return res.status(403).json({
+      error: authErrors.authKeyInvalid,
+      message: 'Forbidden, invalid auth key',
+    });
   }
 
   const client = req.body[authRequestClientKey];
   if (!client) {
-    return res.status(400).json({ message: 'Bad Request, no client provided' });
+    return res.status(400).json({
+      error: authErrors.clientNotProvided,
+      message: 'Bad Request, no client provided',
+    });
   }
 
   createAndSetAuthCookies(res, client);
@@ -38,12 +45,13 @@ export const refreshAuth: RequestHandler = (req, res) => {
     decoded = jwt.verify(refreshToken, config.jwtKey);
   } catch (err) {
     if (err instanceof Error && err.name === 'TokenExpiredError') {
-      return res
-        .status(401)
-        .json({ error: 'REFRESH_TOKEN_EXPIRED', message: 'Session expired' });
+      return res.status(401).json({
+        error: authErrors.refreshTokenExpired,
+        message: 'Session expired',
+      });
     } else if (err) {
       return res.status(401).json({
-        error: 'REFRESH_TOKEN_INVALID',
+        error: authErrors.refreshTokenInvalid,
         message: 'Invalid refresh token',
       });
     }
@@ -55,7 +63,7 @@ export const refreshAuth: RequestHandler = (req, res) => {
   }
   if (typeof client === 'undefined') {
     return res.status(401).json({
-      error: 'REFRESH_TOKEN_INVALID',
+      error: authErrors.refreshTokenInvalid,
       message: 'Refresh token provided no client',
     });
   }
@@ -66,14 +74,14 @@ export const refreshAuth: RequestHandler = (req, res) => {
 const createAndSetAuthCookies = (res: Response, client: string) => {
   const payload: JwtRequestPayload = { authRequestClientKey: client };
   const newAccessToken = generateAccessToken(payload);
-  res.cookie(accessTokenName, newAccessToken, {
+  res.cookie(authAccessTokenName, newAccessToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
     maxAge: accessAgeS * 1000,
   });
   const newRefreshToken = generateRefreshToken(payload);
-  res.cookie(refreshTokenName, newRefreshToken, {
+  res.cookie(authRefreshTokenName, newRefreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'none',

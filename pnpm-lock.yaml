@@ -31,8 +31,8 @@ importers:
         specifier: ^9.34.0
         version: 9.38.0
       '@seanboose/personal-website-api-types':
-        specifier: ^1.0.7
-        version: 1.0.7
+        specifier: 1.0.11
+        version: 1.0.11
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
@@ -467,8 +467,8 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@seanboose/personal-website-api-types@1.0.7':
-    resolution: {integrity: sha512-2MdzDgJxBPgTgKf5OwfdPPCQPvd8lVBBwJU+SS1XQ0kwWjbrliiXLLrsOM+z5lhyG2L7xuDi4LX5+SAniOkjaw==, tarball: https://npm.pkg.github.com/download/@seanboose/personal-website-api-types/1.0.7/937640c790b277792798f0777fa71313771ba095}
+  '@seanboose/personal-website-api-types@1.0.11':
+    resolution: {integrity: sha512-tjd6MBB79I4iM10P2uP/dzu0Jw4Pfds7qNBqmjjiXa99goOs9dvcJu8rBRUrf5IBW0WoUazLjcKiIfLtd+4TVw==, tarball: https://npm.pkg.github.com/download/@seanboose/personal-website-api-types/1.0.11/6016af5154961cd8f8119a1e908f4f09812ae479}
 
   '@smithy/abort-controller@4.2.3':
     resolution: {integrity: sha512-xWL9Mf8b7tIFuAlpjKtRPnHrR8XVrwTj5NPYO/QwZPtc0SDLsPxb56V5tzi5yspSMytISHybifez+4jlrx0vkQ==}
@@ -2299,7 +2299,7 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@seanboose/personal-website-api-types@1.0.7': {}
+  '@seanboose/personal-website-api-types@1.0.11': {}
 
   '@smithy/abort-controller@4.2.3':
     dependencies:
