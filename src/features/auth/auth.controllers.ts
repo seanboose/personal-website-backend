@@ -36,6 +36,7 @@ export const grantAuth: RequestHandler = (req, res) => {
   }
 
   createAndSetAuthCookies(res, client);
+  res.status(200).json({ message: 'Auth granted' });
 };
 
 export const refreshAuth: RequestHandler = (req, res) => {
@@ -69,6 +70,7 @@ export const refreshAuth: RequestHandler = (req, res) => {
   }
 
   createAndSetAuthCookies(res, client);
+  res.status(200).json({ message: 'Auth refreshed' });
 };
 
 const createAndSetAuthCookies = (res: Response, client: string) => {
@@ -87,5 +89,4 @@ const createAndSetAuthCookies = (res: Response, client: string) => {
     sameSite: 'none',
     maxAge: refreshAgeS * 1000,
   });
-  res.status(200).json({ message: 'Auth refreshed' });
 };
