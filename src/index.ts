@@ -3,14 +3,18 @@ import express from 'express';
 
 import { authRoutes } from './features/auth/auth.routes.js';
 import { imagesRoutes } from './features/images/images.routes.js';
-import { config } from './shared/config.js';
+import { config, envDevelopment } from './shared/config.js';
 
 const app = express();
 
 app.use(
   cors({
-    origin: config.clientOrigin,
-    methods: ['GET'],
+    origin: [
+      'https://personal-website-frontend-flame.vercel.app',
+      'https://personal-website-frontend-staging.vercel.app',
+      config.env === envDevelopment ? 'http://localhost:5173' : undefined,
+    ].filter((origin) => typeof origin !== 'undefined'),
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   }),
 );
