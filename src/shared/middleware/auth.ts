@@ -1,4 +1,8 @@
-import { authErrors } from '@seanboose/personal-website-api-types';
+import {
+  authAccessTokenName,
+  authErrors,
+  authRefreshTokenName,
+} from '@seanboose/personal-website-api-types';
 import { parse } from 'cookie';
 import type { Request, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
@@ -19,12 +23,12 @@ export const requireAuth: RequestHandler = (req, res, next) => {
     if (err instanceof Error && err.name === 'TokenExpiredError') {
       res.status(401).json({
         name: authErrors.accessTokenExpired,
-        message: 'Auth token expired, please refresh',
+        message: 'Access token expired, please refresh auth',
       });
     } else if (err) {
       res.status(401).json({
         name: authErrors.accessTokenInvalid,
-        message: 'Unauthorized, invalid token',
+        message: 'Unauthorized, invalid access token',
       });
       return;
     }
@@ -33,14 +37,16 @@ export const requireAuth: RequestHandler = (req, res, next) => {
   next();
 };
 
-const readAccessToken = (req: Request) => {
-  return (
-    req.cookies?.access_token || parse(req.headers.cookie || '').access_token
-  );
+export const readAccessToken = (req: Request) => {
+  return readCookieWithHeaderFallback(req, authAccessTokenName);
 };
 
 export const readRefreshToken = (req: Request) => {
+  return readCookieWithHeaderFallback(req, authRefreshTokenName);
+};
+
+const readCookieWithHeaderFallback = (req: Request, cookieName: string) => {
   return (
-    req.cookies?.refresh_token || parse(req.headers.cookie || '').refresh_token
+    req.cookies?.[cookieName] || parse(req.headers.cookie || '')[cookieName]
   );
 };
