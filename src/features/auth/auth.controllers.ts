@@ -1,21 +1,17 @@
 import {
-  authAccessTokenName,
   authErrors,
-  authRefreshTokenName,
   authRequestClientKey,
   authRequestHeaderName,
 } from '@seanboose/personal-website-api-types';
-import type { RequestHandler, Response } from 'express';
+import type { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { config } from '../../shared/config.js';
 import { readRefreshToken } from '../../shared/middleware/auth.js';
 import {
-  accessAgeS,
   generateAccessToken,
   generateRefreshToken,
   type JwtRequestPayload,
-  refreshAgeS,
 } from './auth.service.js';
 
 export const grantAuth: RequestHandler = (req, res) => {
@@ -35,8 +31,7 @@ export const grantAuth: RequestHandler = (req, res) => {
     });
   }
 
-  createAndSetAuthCookies(res, client);
-  res.status(200).json({ message: 'Auth granted' });
+  res.status(200).json(createAuthTokens(client));
 };
 
 export const refreshAuth: RequestHandler = (req, res) => {
@@ -69,24 +64,13 @@ export const refreshAuth: RequestHandler = (req, res) => {
     });
   }
 
-  createAndSetAuthCookies(res, client);
-  res.status(200).json({ message: 'Auth refreshed' });
+  res.status(200).json(createAuthTokens(client));
 };
 
-const createAndSetAuthCookies = (res: Response, client: string) => {
+const createAuthTokens = (client: string) => {
   const payload: JwtRequestPayload = { authRequestClientKey: client };
-  const newAccessToken = generateAccessToken(payload);
-  res.cookie(authAccessTokenName, newAccessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: accessAgeS * 1000,
-  });
-  const newRefreshToken = generateRefreshToken(payload);
-  res.cookie(authRefreshTokenName, newRefreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: refreshAgeS * 1000,
-  });
+  return {
+    accessToken: generateAccessToken(payload),
+    refreshToken: generateRefreshToken(payload),
+  };
 };

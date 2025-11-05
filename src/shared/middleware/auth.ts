@@ -1,5 +1,4 @@
 import {
-  authAccessTokenName,
   authErrors,
   authRefreshTokenName,
 } from '@seanboose/personal-website-api-types';
@@ -10,7 +9,7 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
 
 export const requireAuth: RequestHandler = (req, res, next) => {
-  const accessToken = readAccessToken(req);
+  const accessToken = readAuthorizationHeader(req);
   if (!accessToken) {
     res.status(401).json({
       name: authErrors.accessTokenNotProvided,
@@ -37,10 +36,16 @@ export const requireAuth: RequestHandler = (req, res, next) => {
   next();
 };
 
-export const readAccessToken = (req: Request) => {
-  return readCookieWithHeaderFallback(req, authAccessTokenName);
+const readAuthorizationHeader = (req: Request) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return undefined;
+  }
+  const accessToken = authHeader.substring(7);
+  return accessToken;
 };
 
+// TODO this may just come as a request payload rather than a cookie/header
 export const readRefreshToken = (req: Request) => {
   return readCookieWithHeaderFallback(req, authRefreshTokenName);
 };
