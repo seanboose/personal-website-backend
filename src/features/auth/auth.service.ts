@@ -12,10 +12,12 @@ const generateToken = (payload: JwtRequestPayload, expiresIn: number) => {
 
 export const createAuthTokens = (client: string) => {
   const payload: JwtRequestPayload = { authRequestClientKey: client };
+  const accessTokenExpiresIn = config.authAccessTokenExpiresIn;
+  const refreshTokenExpiresIn = config.authRefreshTokenExpiresIn;
   return {
-    accessToken: generateToken(payload, config.authAccessTokenExpiresIn),
-    expiresIn: config.authAccessTokenExpiresIn,
-    refreshToken: generateToken(payload, config.authRefreshTokenExpiresIn),
-    refreshExpiresIn: config.authRefreshTokenExpiresIn,
+    accessToken: generateToken(payload, accessTokenExpiresIn),
+    expiresIn: accessTokenExpiresIn,
+    refreshToken: generateToken(payload, refreshTokenExpiresIn),
+    refreshExpiresIn: refreshTokenExpiresIn,
   };
 };
