@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { config } from '../config.js';
 
 export const requireAuth: RequestHandler = (req, res, next) => {
-  const accessToken = readAuthorizationHeader(req);
+  const accessToken = getAccessToken(req);
   if (!accessToken) {
     res.status(401).json({
       name: authErrors.accessTokenNotProvided,
@@ -32,22 +32,10 @@ export const requireAuth: RequestHandler = (req, res, next) => {
   });
 };
 
-const readAuthorizationHeader = (req: Request) => {
+const getAccessToken = (req: Request) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return undefined;
   }
-  const accessToken = authHeader.substring(7);
-  return accessToken;
+  return authHeader.substring(7);
 };
-
-// TODO this may just come as a request payload rather than a cookie/header
-// export const readRefreshToken = (req: Request) => {
-//   return readCookieWithHeaderFallback(req, authRefreshTokenName);
-// };
-//
-// const readCookieWithHeaderFallback = (req: Request, cookieName: string) => {
-//   return (
-//     req.cookies?.[cookieName] || parse(req.headers.cookie || '')[cookieName]
-//   );
-// };
