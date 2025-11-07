@@ -1,8 +1,4 @@
-import {
-  authErrors,
-  authRefreshTokenName,
-} from '@seanboose/personal-website-api-types';
-import { parse } from 'cookie';
+import { authErrors } from '@seanboose/personal-website-api-types';
 import type { Request, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -24,6 +20,7 @@ export const requireAuth: RequestHandler = (req, res, next) => {
         name: authErrors.accessTokenExpired,
         message: 'Access token expired, please refresh auth',
       });
+      return;
     } else if (err) {
       res.status(401).json({
         name: authErrors.accessTokenInvalid,
@@ -31,9 +28,8 @@ export const requireAuth: RequestHandler = (req, res, next) => {
       });
       return;
     }
+    next();
   });
-
-  next();
 };
 
 const readAuthorizationHeader = (req: Request) => {
@@ -46,12 +42,12 @@ const readAuthorizationHeader = (req: Request) => {
 };
 
 // TODO this may just come as a request payload rather than a cookie/header
-export const readRefreshToken = (req: Request) => {
-  return readCookieWithHeaderFallback(req, authRefreshTokenName);
-};
-
-const readCookieWithHeaderFallback = (req: Request, cookieName: string) => {
-  return (
-    req.cookies?.[cookieName] || parse(req.headers.cookie || '')[cookieName]
-  );
-};
+// export const readRefreshToken = (req: Request) => {
+//   return readCookieWithHeaderFallback(req, authRefreshTokenName);
+// };
+//
+// const readCookieWithHeaderFallback = (req: Request, cookieName: string) => {
+//   return (
+//     req.cookies?.[cookieName] || parse(req.headers.cookie || '')[cookieName]
+//   );
+// };

@@ -1,5 +1,6 @@
 import {
   authErrors,
+  authRefreshTokenName,
   authRequestClientKey,
   authRequestHeaderName,
 } from '@seanboose/personal-website-api-types';
@@ -7,7 +8,6 @@ import type { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { config } from '../../shared/config.js';
-import { readRefreshToken } from '../../shared/middleware/auth.js';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -35,7 +35,7 @@ export const grantAuth: RequestHandler = (req, res) => {
 };
 
 export const refreshAuth: RequestHandler = (req, res) => {
-  const refreshToken = readRefreshToken(req);
+  const refreshToken = req.body[authRefreshTokenName];
   let decoded;
   try {
     decoded = jwt.verify(refreshToken, config.jwtKey);
