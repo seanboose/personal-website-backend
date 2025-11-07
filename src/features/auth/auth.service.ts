@@ -10,17 +10,12 @@ const generateToken = (payload: JwtRequestPayload, expiresIn: number) => {
   return jwt.sign(payload, config.jwtKey, { expiresIn });
 };
 
-// TODO making this super short for testing
-const accessExpiresInS = 10;
-// export const accessAgeS = 15 * 60; // 15 minutes
-const refreshExpiresInS = 60 * 60 * 24 * 7; // 7 days
-
 export const createAuthTokens = (client: string) => {
   const payload: JwtRequestPayload = { authRequestClientKey: client };
   return {
-    accessToken: generateToken(payload, accessExpiresInS),
-    expiresIn: accessExpiresInS,
-    refreshToken: generateToken(payload, refreshExpiresInS),
-    refreshExpiresIn: refreshExpiresInS,
+    accessToken: generateToken(payload, config.authAccessTokenExpiresIn),
+    expiresIn: config.authAccessTokenExpiresIn,
+    refreshToken: generateToken(payload, config.authRefreshTokenExpiresIn),
+    refreshExpiresIn: config.authRefreshTokenExpiresIn,
   };
 };

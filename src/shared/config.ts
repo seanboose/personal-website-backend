@@ -7,6 +7,8 @@ dotenv.config({
 });
 
 export interface Config {
+  authAccessTokenExpiresIn: number;
+  authRefreshTokenExpiresIn: number;
   authRequestKey: string;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
@@ -16,6 +18,12 @@ export interface Config {
 }
 
 export const config: Config = {
+  authAccessTokenExpiresIn: Number(
+    getRequiredEnv('AUTH_ACCESS_TOKEN_EXPIRES_IN_S'),
+  ),
+  authRefreshTokenExpiresIn: Number(
+    getRequiredEnv('AUTH_REFRESH_TOKEN_EXPIRES_IN_S'),
+  ),
   authRequestKey: getRequiredEnv('AUTH_REQUEST_KEY'),
   awsAccessKeyId: getRequiredEnv('AWS_ACCESS_KEY_ID'),
   awsSecretAccessKey: getRequiredEnv('AWS_SECRET_ACCESS_KEY'),
