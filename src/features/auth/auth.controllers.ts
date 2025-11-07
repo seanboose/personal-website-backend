@@ -8,11 +8,7 @@ import type { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { config } from '../../shared/config.js';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  type JwtRequestPayload,
-} from './auth.service.js';
+import { createAuthTokens } from './auth.service.js';
 
 export const grantAuth: RequestHandler = (req, res) => {
   const authRequestKey = req.headers[authRequestHeaderName];
@@ -65,12 +61,4 @@ export const refreshAuth: RequestHandler = (req, res) => {
   }
 
   res.status(200).json(createAuthTokens(client));
-};
-
-const createAuthTokens = (client: string) => {
-  const payload: JwtRequestPayload = { authRequestClientKey: client };
-  return {
-    accessToken: generateAccessToken(payload),
-    refreshToken: generateRefreshToken(payload),
-  };
 };
