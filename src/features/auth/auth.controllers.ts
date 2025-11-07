@@ -1,22 +1,14 @@
 import {
-  authAccessTokenName,
   authErrors,
   authRefreshTokenName,
   authRequestClientKey,
   authRequestHeaderName,
 } from '@seanboose/personal-website-api-types';
-import type { RequestHandler, Response } from 'express';
+import type { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { config } from '../../shared/config.js';
-import { readRefreshToken } from '../../shared/middleware/auth.js';
-import {
-  accessAgeS,
-  generateAccessToken,
-  generateRefreshToken,
-  type JwtRequestPayload,
-  refreshAgeS,
-} from './auth.service.js';
+import { createAuthTokens } from './auth.service.js';
 
 export const grantAuth: RequestHandler = (req, res) => {
   const authRequestKey = req.headers[authRequestHeaderName];
@@ -35,12 +27,11 @@ export const grantAuth: RequestHandler = (req, res) => {
     });
   }
 
-  createAndSetAuthCookies(res, client);
-  res.status(200).json({ message: 'Auth granted' });
+  res.status(200).json(createAuthTokens(client));
 };
 
 export const refreshAuth: RequestHandler = (req, res) => {
-  const refreshToken = readRefreshToken(req);
+  const refreshToken = req.body[authRefreshTokenName];
   let decoded;
   try {
     decoded = jwt.verify(refreshToken, config.jwtKey);
@@ -69,24 +60,5 @@ export const refreshAuth: RequestHandler = (req, res) => {
     });
   }
 
-  createAndSetAuthCookies(res, client);
-  res.status(200).json({ message: 'Auth refreshed' });
-};
-
-const createAndSetAuthCookies = (res: Response, client: string) => {
-  const payload: JwtRequestPayload = { authRequestClientKey: client };
-  const newAccessToken = generateAccessToken(payload);
-  res.cookie(authAccessTokenName, newAccessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: accessAgeS * 1000,
-  });
-  const newRefreshToken = generateRefreshToken(payload);
-  res.cookie(authRefreshTokenName, newRefreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    maxAge: refreshAgeS * 1000,
-  });
+  res.status(200).json(createAuthTokens(client));
 };

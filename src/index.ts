@@ -10,7 +10,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      'https://personal-website-frontend-flame.vercel.app',
+      'https://personal-website-frontend-production.vercel.app',
       'https://personal-website-frontend-staging.vercel.app',
       config.env === envDevelopment ? 'http://localhost:5173' : undefined,
     ].filter((origin) => typeof origin !== 'undefined'),
