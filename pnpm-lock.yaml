@@ -20,6 +20,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
+      zod:
+        specifier: ^4.1.12
+        version: 4.1.12
     devDependencies:
       '@aws-sdk/client-s3':
         specifier: ^3.876.0
@@ -31,8 +34,8 @@ importers:
         specifier: ^9.34.0
         version: 9.38.0
       '@seanboose/personal-website-api-types':
-        specifier: 1.0.11
-        version: 1.0.11
+        specifier: 1.0.12
+        version: 1.0.12
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
@@ -467,8 +470,8 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@seanboose/personal-website-api-types@1.0.11':
-    resolution: {integrity: sha512-tjd6MBB79I4iM10P2uP/dzu0Jw4Pfds7qNBqmjjiXa99goOs9dvcJu8rBRUrf5IBW0WoUazLjcKiIfLtd+4TVw==, tarball: https://npm.pkg.github.com/download/@seanboose/personal-website-api-types/1.0.11/6016af5154961cd8f8119a1e908f4f09812ae479}
+  '@seanboose/personal-website-api-types@1.0.12':
+    resolution: {integrity: sha512-NDZ3AZ9ipIIuiO3c7O3278J09CKkGPa7C5JgJdIxWBAGm7O5qudNvLIDpyQcfQA3wlwBLI2x+5CH7xmS/4Nvnw==, tarball: https://npm.pkg.github.com/download/@seanboose/personal-website-api-types/1.0.12/476785d1531c8edb6d285d496915a14a66b253fe}
 
   '@smithy/abort-controller@4.2.3':
     resolution: {integrity: sha512-xWL9Mf8b7tIFuAlpjKtRPnHrR8XVrwTj5NPYO/QwZPtc0SDLsPxb56V5tzi5yspSMytISHybifez+4jlrx0vkQ==}
@@ -1664,6 +1667,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+
 snapshots:
 
   '@aws-crypto/crc32@5.2.0':
@@ -2299,7 +2305,9 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@seanboose/personal-website-api-types@1.0.11': {}
+  '@seanboose/personal-website-api-types@1.0.12':
+    dependencies:
+      zod: 4.1.12
 
   '@smithy/abort-controller@4.2.3':
     dependencies:
@@ -3700,3 +3708,5 @@ snapshots:
       yargs-parser: 21.1.1
 
   yocto-queue@0.1.0: {}
+
+  zod@4.1.12: {}

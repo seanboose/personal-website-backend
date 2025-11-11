@@ -1,8 +1,15 @@
 import {
-  authErrors,
-  authRefreshTokenName,
-  authRequestClientKey,
-  authRequestHeaderName,
+  type AuthGrantRequestBody,
+  AuthGrantRequestBodySchema,
+  authGrantRequestHeaderName,
+  AuthGrantRequestHeadersSchema,
+  type AuthGrantResponse,
+  AuthKeyInvalidError,
+  type AuthRefreshRequestBody,
+  AuthRefreshRequestBodySchema,
+  type AuthRefreshResponse,
+  RefreshTokenExpiredError,
+  RefreshTokenInvalidError,
 } from '@seanboose/personal-website-api-types';
 import type { RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
@@ -10,55 +17,50 @@ import jwt from 'jsonwebtoken';
 import { config } from '../../shared/config.js';
 import { createAuthTokens } from './auth.service.js';
 
-export const grantAuth: RequestHandler = (req, res) => {
-  const authRequestKey = req.headers[authRequestHeaderName];
+export const grantAuth: RequestHandler<
+  never,
+  AuthGrantResponse,
+  AuthGrantRequestBody,
+  never
+> = (req, res) => {
+  const validatedHeaders = AuthGrantRequestHeadersSchema.parse(req.headers);
+  const validatedBody = AuthGrantRequestBodySchema.parse(req.body);
+
+  const authRequestKey = validatedHeaders[authGrantRequestHeaderName];
   if (authRequestKey !== config.authRequestKey) {
-    return res.status(403).json({
-      error: authErrors.authKeyInvalid,
-      message: 'Forbidden, invalid auth key',
-    });
+    throw new AuthKeyInvalidError();
   }
 
-  const client = req.body[authRequestClientKey];
-  if (!client) {
-    return res.status(400).json({
-      error: authErrors.clientNotProvided,
-      message: 'Bad Request, no client provided',
-    });
-  }
-
-  res.status(200).json(createAuthTokens(client));
+  const client = validatedBody.authRequestClient;
+  res.status(200).json(createAuthTokens(client) satisfies AuthGrantResponse);
 };
 
-export const refreshAuth: RequestHandler = (req, res) => {
-  const refreshToken = req.body[authRefreshTokenName];
-  let decoded;
+export const refreshAuth: RequestHandler<
+  never,
+  AuthRefreshResponse,
+  AuthRefreshRequestBody,
+  never
+> = (req, res) => {
+  const validatedBody = AuthRefreshRequestBodySchema.parse(req.body);
+  const refreshToken = validatedBody.refreshToken;
+  let decodedToken;
   try {
-    decoded = jwt.verify(refreshToken, config.jwtKey);
+    decodedToken = jwt.verify(refreshToken, config.jwtKey);
   } catch (err) {
     if (err instanceof Error && err.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        error: authErrors.refreshTokenExpired,
-        message: 'Session expired',
-      });
+      throw new RefreshTokenExpiredError();
     } else if (err) {
-      return res.status(401).json({
-        error: authErrors.refreshTokenInvalid,
-        message: 'Invalid refresh token',
-      });
+      throw new RefreshTokenInvalidError();
     }
   }
 
   let client: string | undefined = undefined;
-  if (typeof decoded !== 'undefined' && typeof decoded !== 'string') {
-    client = decoded.authRequestClientKey;
+  if (typeof decodedToken !== 'undefined' && typeof decodedToken !== 'string') {
+    client = decodedToken.authRequestClientKey;
   }
   if (typeof client === 'undefined') {
-    return res.status(401).json({
-      error: authErrors.refreshTokenInvalid,
-      message: 'Refresh token provided no client',
-    });
+    throw new RefreshTokenInvalidError();
   }
 
-  res.status(200).json(createAuthTokens(client));
+  res.status(200).json(createAuthTokens(client) satisfies AuthRefreshResponse);
 };

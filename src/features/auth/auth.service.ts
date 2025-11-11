@@ -6,10 +6,6 @@ export interface JwtRequestPayload {
   authRequestClientKey: string;
 }
 
-const generateToken = (payload: JwtRequestPayload, expiresIn: number) => {
-  return jwt.sign(payload, config.jwtKey, { expiresIn });
-};
-
 export const createAuthTokens = (client: string) => {
   const payload: JwtRequestPayload = { authRequestClientKey: client };
   const accessTokenExpiresIn = config.authAccessTokenExpiresIn;
@@ -20,4 +16,8 @@ export const createAuthTokens = (client: string) => {
     refreshToken: generateToken(payload, refreshTokenExpiresIn),
     refreshExpiresIn: refreshTokenExpiresIn,
   };
+};
+
+const generateToken = (payload: JwtRequestPayload, expiresIn: number) => {
+  return jwt.sign(payload, config.jwtKey, { expiresIn });
 };
