@@ -19,6 +19,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@seanboose/personal-website-api-types": "1.0.12",
     "cookie": "^1.0.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -29,7 +30,6 @@
     "@aws-sdk/client-s3": "^3.876.0",
     "@aws-sdk/s3-request-presigner": "^3.876.0",
     "@eslint/js": "^9.34.0",
-    "@seanboose/personal-website-api-types": "1.0.12",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
