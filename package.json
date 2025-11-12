@@ -4,13 +4,14 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "concurrently -c yellow,cyan \"npm:dev:tsx\" \"npm:lint:watch\"",
+    "dev": "concurrently -c yellow,cyan,magenta \"npm:dev:tsx\" \"npm:dev:lint\" \"npm:dev:typecheck\"",
+    "dev:lint": "nodemon --watch src --ext js,ts,jsx,tsx --delay 100ms --exec \"npm run lint\"",
     "dev:tsx": "tsx watch src/index.ts",
+    "dev:typecheck": "tsc --noEmit --watch",
     "build": "npm run lint && npm run build:ts",
     "build:ts": "tsc",
     "serve": "node dist/index.js",
     "lint": "eslint src",
-    "lint:watch": "nodemon --watch src --ext js,ts,jsx,tsx --delay 100ms --exec \"npm run lint\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,13 +22,14 @@
     "cookie": "^1.0.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.876.0",
     "@aws-sdk/s3-request-presigner": "^3.876.0",
     "@eslint/js": "^9.34.0",
-    "@seanboose/personal-website-api-types": "1.0.11",
+    "@seanboose/personal-website-api-types": "1.0.12",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",

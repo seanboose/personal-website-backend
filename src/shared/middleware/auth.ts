@@ -1,41 +1,41 @@
-import { authErrors } from '@seanboose/personal-website-api-types';
-import type { Request, RequestHandler } from 'express';
+import {
+  AccessTokenExpiredError,
+  AccessTokenInvalidError,
+  ApiError,
+  AuthenticatedRequestHeadersSchema,
+  UnexpectedError,
+  ValidationError,
+} from '@seanboose/personal-website-api-types';
+import type { ErrorRequestHandler, RequestHandler } from 'express';
 import jwt from 'jsonwebtoken';
+import { z } from 'zod';
 
 import { config } from '../config.js';
 
 export const requireAuth: RequestHandler = (req, res, next) => {
-  const accessToken = getAccessToken(req);
-  if (!accessToken) {
-    res.status(401).json({
-      name: authErrors.accessTokenNotProvided,
-      message: 'Unauthorized, no token provided',
-    });
-    return;
-  }
-
+  const validatedHeaders = AuthenticatedRequestHeadersSchema.parse(req.headers);
+  const accessToken = validatedHeaders.authorization;
   jwt.verify(accessToken, config.jwtKey, (err: unknown) => {
     if (err instanceof Error && err.name === 'TokenExpiredError') {
-      res.status(401).json({
-        name: authErrors.accessTokenExpired,
-        message: 'Access token expired, please refresh auth',
-      });
-      return;
+      throw new AccessTokenExpiredError();
     } else if (err) {
-      res.status(401).json({
-        name: authErrors.accessTokenInvalid,
-        message: 'Unauthorized, invalid access token',
-      });
-      return;
+      throw new AccessTokenInvalidError();
     }
-    next();
   });
+
+  next();
 };
 
-const getAccessToken = (req: Request) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return undefined;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const handleApiErrors: ErrorRequestHandler = (err, req, res, _next) => {
+  console.error('An error occurred while handling a request:');
+  console.error(err);
+  if (err instanceof ApiError) {
+    const { statusCode } = err;
+    return res.status(statusCode).json(err);
+  } else if (err instanceof z.ZodError) {
+    const apiError = new ValidationError(JSON.stringify(err.issues));
+    return res.status(apiError.statusCode).json(apiError);
   }
-  return authHeader.substring(7);
+  return res.status(500).json(new UnexpectedError());
 };
