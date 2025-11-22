@@ -13,12 +13,15 @@ export const getImageList = async () => {
 
   const command = new ListObjectsV2Command({
     Bucket: config.s3ImagesBucket,
+    Prefix: 'auth-image',
   });
   const response = await s3.send(command);
   if (response.Contents) {
     const fileNames = response.Contents.map((item) => {
       return item.Key;
-    }).filter((key) => key !== undefined);
+    })
+      .filter((key) => key !== undefined)
+      .filter((key) => key.endsWith('.png'));
     const imageUrls = await getImageUrls(fileNames);
     images = fileNames.map((fileName) => ({
       fileName,
